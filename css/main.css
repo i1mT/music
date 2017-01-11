@@ -1,0 +1,113 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-family: "微软雅黑";
+	box-sizing: border-box;
+}
+
+body{
+	font-size: 100%;
+}
+
+.footer{
+	width: 100%;
+	height: 6em;
+}
+
+.footer button{
+	width: 20%;
+	height: 100%;
+	float: left;
+	border: 0;
+	outline: none;
+	font-size: 1.5em;
+}
+
+.bg {
+    min-height: 100%;
+    min-width: 50em;
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+	z-index: -10;
+}
+
+.panel{
+	background: #ccc;
+	margin: 0 auto;
+	padding: .2em .2em;
+	width:30em;
+	height: 37em;
+	margin-top: 3em;
+}
+
+.panel-title{
+	background: #EE3B3B;
+	width: 100%;
+	height: 1.5em;
+	text-align:center;
+	font-size: 2.5em;
+	line-height: 1.5em;
+	color: #fff;
+	text-shadow: 0 1px 5px #595959;
+}
+
+span{
+	height:40px; 
+	width:40px; 
+	display:block; 
+	position:relative;
+} 
+
+.pause{
+	height:50%; 
+	width:50%;
+	border:.1em solid #333; 
+	border-radius:50%;
+}
+
+.pause:before, .demoSpan1:after{
+	content:''; 
+	height:1.1em; 
+	width:.15em; 
+	display:block; 
+	background:#333; 
+	position:absolute; 
+	top:.2em; 
+	left:.2em;
+}
+
+.pause:after{
+	left:20px;
+}
+
+.progress-bar{
+	width: 100%;
+	height: 1em;
+	background: #43CD80;
+}
+
+.volume{
+	width: 100%;
+	height: 2.2em;
+	color: #eee;
+	background: #BF3EFF;
+}
+
+.song-img{
+	width: 100%;
+	height: 23em;
+	background: #B0E2FF;
+	overflow: hidden;
+}
+.song-img img{
+	width: 17em;
+	height: 17em;
+	margin: 0 auto;
+	margin-top: 4em;
+	display: block;
+	border: .5em solid #fff;
+	border-radius: 50%;
+}
