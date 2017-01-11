@@ -1,3 +1,9 @@
+<?php 
+	$musicHost = "music/"; //音乐文件所在的路径
+	$musicImgHost = "images/music-img/"; //音乐对应图片所在路径
+	$musicNames = scandir($musicHost);//获得音乐名
+	$musicImgNames = scandir($musicImgHost);//获得所有图片名字
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,8 +11,8 @@
 	<title>音乐播放器-By iimT</title>
 	<link rel="stylesheet" type="text/css" href="css/iconfont.css">
 	<link rel="stylesheet" href="css/main.css">
-	<script src="G:/库/jquery-3.1.1/jquery-3.1.1.min.js"></script>
-	<script src="G:/库/jquery-3.1.1/jquery-3.1.1.js"></script>
+	<script src="js/jquery-3.1.1.js"></script>
+	<script src="js/jquery-3.1.1.min.js"></script>
 </head>
 <body>
 	<img src="images/background.jpg" class="bg">
@@ -33,8 +39,13 @@
 		</div>
 	</div>
 	<audio src="music/Kelly Clarkson - Catch My Breath.mp3" preload>
-		<source title="你在终点等我" data-img="http://p1.music.126.net/ddhcDeGSl9VhXJLfOsNDEA==/3433774824740403.jpg" src="http://link.hhtjim.com/163/431357712.mp3">
-		<source title="白昼之夜（纯音乐）" data-img="http://p1.music.126.net/he7P6CYpQmz8KqYSdULuOQ==/94557999994394.jpg" src="http://oc1475jft.bkt.clouddn.com/baizhouzhiye.mp3">
+		<?php 
+			for($i=1;$i<=5;$i++){ 
+		?> 
+			<source id="<?php echo $i; ?>" title="名字" data-img="封面" src="地址">
+		<?php
+			}
+		?>
 	</audio>
 </body>
 	<script src="js/script.js"></script>
