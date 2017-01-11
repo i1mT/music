@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
 	<title>音乐播放器-By iimT</title>
+	<link rel="stylesheet" type="text/css" href="css/iconfont.css">
 	<link rel="stylesheet" href="css/main.css">
 	<script src="G:/库/jquery-3.1.1/jquery-3.1.1.min.js"></script>
 	<script src="G:/库/jquery-3.1.1/jquery-3.1.1.js"></script>
@@ -11,21 +12,30 @@
 	<img src="images/background.jpg" class="bg">
 	<div class="panel">
 		<div class="panel-title">音乐播放器 - By iimT</div>
-		<div class="volume">这是音量</div>
+		<div class="volume">
+			<i class="iconfont icon-shengyin"></i>
+			<div class="volume-line">
+				<span class="dot-volume"></span>
+			</div>
+		</div>
 		<div class="song-img">
 			<img src="images/default-song-img.jpg" alt="">
 		</div>
-		<div class="progress-bar"></div>
+		<div class="progress-bar">
+			<span class="dot"></span>
+		</div>
 		<div class="footer">
-			<button>循环</button>
-			<button>上一曲</button>
-			<button><span class="pause">
-</span></button>
-			<button>下一曲</button>
-			<button>列表</button>
+			<button id="loop" class="iconfont icon-danquxunhuan"></button>
+			<button id="after" class="iconfont icon-kuaitui"></button>
+			<button id="play" class="iconfont icon-bofang"></button>
+			<button id="before" class="iconfont icon-kuaijin"></button>
+			<button id="playList" class="iconfont icon-liebiao"></button>
 		</div>
 	</div>
-	<audio src="music/Kelly Clarkson - Catch My Breath.mp3"></audio>
+	<audio src="music/Kelly Clarkson - Catch My Breath.mp3" preload>
+		<source title="你在终点等我" data-img="http://p1.music.126.net/ddhcDeGSl9VhXJLfOsNDEA==/3433774824740403.jpg" src="http://link.hhtjim.com/163/431357712.mp3">
+		<source title="白昼之夜（纯音乐）" data-img="http://p1.music.126.net/he7P6CYpQmz8KqYSdULuOQ==/94557999994394.jpg" src="http://oc1475jft.bkt.clouddn.com/baizhouzhiye.mp3">
+	</audio>
 </body>
 	<script src="js/script.js"></script>
 </html>
