@@ -11,6 +11,10 @@ body{
 	width: 100%;
 }
 
+li{
+	list-style: none;
+}
+
 .dot{
 	width: 12px;
 	height: 12px;
@@ -88,7 +92,6 @@ body{
     left: 0;
 	z-index: -10;
 }
-
 .panel{
 	width:35%;
 	height: 80%;
@@ -164,7 +167,7 @@ body{
 	left: 0;
 	right: 0;
 	display: block;
-	border: .5em solid #fff;
+	border: .5em solid #0000ff;
 	border-radius: 50%;
 }
 
@@ -172,9 +175,13 @@ body{
 	box-shadow: 0 0 3em 0 #888;
 }
 
-/****************
-**媒体查询样式**
-****************/
+.List{
+	width: 15px;
+	height: 15px;	
+	background: #eee;
+	z-index: 10;
+}
+
 @media screen and (min-width: 700px) and (max-width: 1025px){  /*ipad pro*/
 body{
 	font-size: 18px;
