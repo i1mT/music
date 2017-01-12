@@ -1,6 +1,6 @@
 <?php 
-	$musicHost = "music/"; //音乐文件所在的路径
-	$musicImgHost = "images/music-img/"; //音乐对应图片所在路径
+	$musicHost = "./music/"; //音乐文件所在的路径
+	$musicImgHost = "./images/music-img/"; //音乐对应图片所在路径
 	$musicNames = scandir($musicHost);//获得音乐名
 	$musicImgNames = scandir($musicImgHost);//获得所有图片名字
 ?>
@@ -10,7 +10,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
 	<title>音乐播放器-By iimT</title>
 	<link rel="stylesheet" type="text/css" href="css/iconfont.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="./css/main.css">
 	<script src="js/jquery-3.1.1.js"></script>
 	<script src="js/jquery-3.1.1.min.js"></script>
 <style>
@@ -31,8 +31,16 @@
 			<img src="images/default-song-img.jpg" alt="">
 			<div class="List">
 				<ul>
-					<li>123</li>
-					<li>123</li>
+					<?php 
+						for ($i=2; $i < sizeof($musicNames); $i++) {
+					?> 
+						<li title= "<?php echo $musicNames[$i]; ?>"
+							data-img= "<?php echo $musicImgHost.$musicImgNames[$i]; ?>"
+							src= "<?php echo $musicHost.$musicNames[$i]; ?>">
+							<?php echo str_replace('.mp3','', $musicNames[$i]) ?></li>
+					<?php
+						}
+					?>
 				</ul>
 			</div>
 		</div>
@@ -47,15 +55,8 @@
 			<button id="playList" class="iconfont icon-liebiao"></button>
 		</div>
 	</div>
-	<audio src="music/Kelly Clarkson - Catch My Breath.mp3" preload>
-		<?php 
-			for($i=1;$i<=5;$i++){ 
-		?> 
-			<source id="<?php echo $i; ?>" title="名字" data-img="封面" src="地址">
-		<?php
-			}
-		?>
+	<audio src="./music/Kelly Clarkson - Catch My Breath.mp3" preload>
 	</audio>
 </body>
-	<script src="js/script.js"></script>
+	<script src="./js/script.js"></script>
 </html>

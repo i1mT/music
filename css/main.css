@@ -1,3 +1,4 @@
+/*tfh*/
 *{
 	margin: 0;
 	padding: 0;
@@ -15,6 +16,27 @@ li{
 	list-style: none;
 }
 
+/*滚动条样式*/
+::-webkit-scrollbar  {  
+    width: 5px;  
+    background-color: #555;  
+    border-radius: 10px;
+}  
+  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track  {  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  
+    border-radius: 10px;  
+    background-color: #555;  
+}  
+  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb  {  
+    border-radius: 10px;  
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+    background-color: #aaa;  
+}  
+
 .dot{
 	width: 12px;
 	height: 12px;
@@ -25,6 +47,7 @@ li{
 	border: 3px solid #fff;
 	border-radius: 6px;
 	box-shadow: 0 0 5px 0px #000;
+	z-index: 21;
 }
 
 .dot-volume{
@@ -32,7 +55,7 @@ li{
 	height: 8px;
 	position: absolute;
 	top: -3px;
-	left: 0%;
+	left: 100%;
 	background: #00CD66;
 	border: 2px solid #fff;
 	border-radius: 4px;
@@ -98,7 +121,7 @@ li{
 	background: #333;
 	padding: 0;
 	position: absolute;
-	border: 2px solid #636363;
+	border: 3px solid #636363;
 	border-radius: 10px;
     top: 5%;
     left: 35%;
@@ -111,11 +134,13 @@ li{
 	width: 100%;
 	height: 9%;
 	text-align:center;
-	font-size: 180%;
+	line-height: 2;
+	font-size: 1.5em;
 	color: #fff;
 	text-shadow: 0 1px 5px #595959;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 2px solid #888;
 	margin-bottom: 2px;
+	overflow: hidden;
 }
 
 
@@ -167,7 +192,7 @@ li{
 	left: 0;
 	right: 0;
 	display: block;
-	border: .5em solid #0000ff;
+	border: .5em solid #fff;
 	border-radius: 50%;
 }
 
@@ -175,11 +200,32 @@ li{
 	box-shadow: 0 0 3em 0 #888;
 }
 
-.List{
-	width: 15px;
-	height: 15px;	
-	background: #eee;
-	z-index: 10;
+.List{ 
+	width: 90%;
+	height: 94%;
+	position: absolute;
+	top: 3%;
+	left: 5%;
+	color: #ccc;
+	font-size: 1.3em;
+	background: rgba(0,0,0,.5);
+	border-radius: 10px;
+}
+
+.List ul{
+	width: 94%;
+	height: 94%;
+	margin: 3%;
+	overflow: hidden;
+	overflow-y:scroll;
+}
+
+.List ul li{
+	margin-top: .3em;
+	width: 92%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 @media screen and (min-width: 700px) and (max-width: 1025px){  /*ipad pro*/
