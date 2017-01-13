@@ -10,12 +10,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
 	<title>音乐播放器-By iimT</title>
 	<link rel="stylesheet" type="text/css" href="css/iconfont.css">
-	<link rel="stylesheet" type="text/css" href="./css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<script src="js/jquery-3.1.1.js"></script>
 	<script src="js/jquery-3.1.1.min.js"></script>
-<style>
-	
-</style>
 </head>
 <body>
 	<img src="images/background.jpg" class="bg">
@@ -44,7 +41,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="progress-bar">
+		<div class="progress-bar" id = "pro">
 			<span class="dot"></span>
 		</div>
 		<div class="footer">

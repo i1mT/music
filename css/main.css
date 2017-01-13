@@ -100,7 +100,7 @@ li{
 	font-size: 1.5em;
 }
 
-.icon-shengyin:before{
+.icon-shengyin:before,.icon-jingyin:before{
 	font-size: 2.8em;
 }
 
