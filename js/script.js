@@ -24,6 +24,8 @@ var processDotTimer; //进度条的时间函数
 var playedTime;//当前音乐播放了多长时间
 var processDot = $(".dot");
 var volumeBtn = $(".icon-shengyin");//音量按钮
+var volNum = 1;//设置音量
+var volDot = $(".dot-volume");//音量的dot
 
 
 
@@ -33,6 +35,7 @@ var volumeBtn = $(".icon-shengyin");//音量按钮
 		changeMusicCover(curMusicIndex);//设置封面
 	}
 	audio.loop = true;//初始化为单曲循环方式
+	audio.volume = volNum;
 	playedTime = 0;
 })();
 
@@ -77,58 +80,55 @@ play.on('click',function(event) {//播放按钮-->播放与暂停
 
 loopMethod.on('click',function(event) {
 	event.preventDefault();
-	console.log("loop method clicked!")
  	if (audio.loop) {//如果当前是单曲循环模式
  		audio.loop = false;//关闭单曲循环
- 		console.log('关闭单曲循环');
  		classTog('icon-shuaxin','icon-danquxunhuan',loopMethod);
  	}else {
  		audio.loop = true;//开启单曲循环
- 		console.log('开启单曲循环');
  		classTog('icon-danquxunhuan','icon-shuaxin',loopMethod);
  	}
 });
 
 volumeBtn.on("click",function (){
-	if (audio.muted) {
-		console.log("当前是静音,打开声音");
-		audio.muted = false;//打开声音
+	if (volNum==0) {
+		volNum = 1;//打开声音
 		classTog('icon-shengyin','icon-jingyin',volumeBtn);
 	}else{
-		console.log("当前不是静音,关闭声音");
-		audio.muted = true;//关闭声音
+		volNum = 0;//关闭声音
 		classTog('icon-jingyin','icon-shengyin',volumeBtn);
 	}
+	audio.volume = volNum;
+	volDot.css('left', volNum*100 +'%');
 });
+
+
+dragDot();//添加进度条 音量条事件监听
 
 function classTog (addCls,delCls,obj) {
 	obj.addClass(addCls);
 	obj.removeClass(delCls);
-	console.log('tog success!');
 }
 
-dragDot();
+function dragDot(){//音乐进度条和音量托条事件绑定
 
-function dragDot(){
 	var proDot = $(".dot");//获取到进度条的dot
-	var volDot = $(".dot-volume");//获取到音量的dot
-	var pro = document.getElementById('pro');//蓝色进度条
-	var proX = getLeft(pro);//进度条的横坐标
-	var proWidth = $(pro).width();//进度条的宽
+	var MusicPro = document.getElementById('pro');//蓝色进度条
+	var proX = getLeft(MusicPro);//进度条的横坐标
+	var proWidth = $(MusicPro).width();//进度条的宽
 	var curTime;
-	proDot.on('mousedown',function(event) {//鼠标按下时
+	proDot.on('mousedown',function(event) {//音乐进度条拖动点 绑定鼠标按下时事件
 		event.preventDefault();
 		if (!event) {event = window.event;}
-		document.onmousemove=function(event) {
+		document.onmousemove=function(event) {//必须要用原生js绑定是因为后面有document.onmousemove = null;
 			event.preventDefault();
 			if (!event) {event = window.event}
 			var posX = event.clientX;//鼠标在屏幕上的坐标
 			event = window.event;
 			posX = event.clientX;
-			curTime = moveDot(proX,proX+proWidth,posX-6);
+			curTime = moveDot(proX,proX+proWidth,posX-6,proDot,98);
 			audio.currentTime = curTime*audio.duration/98;
 		};
-		$(document).on('mouseup',function(event) {
+		$(document).on('mouseup',function(event) {//当点击拖动点时，对全局监听鼠标移动事件并设置对应的dot位置
 			event.preventDefault();
 			document.onmousemove = null;
 			audio.play();
@@ -137,17 +137,48 @@ function dragDot(){
 		});
 	});
 
-	pro.onclick = function (event){
+	MusicPro.onclick = function (event){//点击蓝色进度条事件
 		event.preventDefault();
 		if (!event) {event = window.event}
 		var posX = event.clientX;//鼠标在屏幕上的坐标
-		curTime = moveDot(proX,proX+proWidth,posX);
+		curTime = moveDot(proX,proX+proWidth,posX,proDot,98);
 		audio.currentTime = curTime*audio.duration/98;
 		audio.play();
 		playStatu = 1;
 		changePlayIcon();
 		processDotGo();
-	}
+	};
+
+
+	//  ↑↑↑音乐进度条事件绑定 ------- ↓↓↓音量条事件绑定
+
+
+	var volPro = document.getElementById('vol');//音量条
+	var volX = getLeft(volPro);//音量条的横坐标
+	var volWidth = $(volPro).width();//音量条的宽度
+	volDot.on('mousedown',function(event) {
+		event.preventDefault();
+		if (!event) {event = window.event;}
+		document.onmousemove = function (event){//当鼠标按下音量拖动点之后开启全局鼠标移动监听事件
+			event.preventDefault();
+			if (!event) {event = window.event;}
+			var posX = event.clientX;//鼠标在屏幕上的坐标
+			volNum = moveDot(volX,volX+volWidth,posX,volDot,1);
+			audio.volume = volNum;
+		}
+		$(document).on('mouseup',function (event) {//鼠标放开之后删除全局鼠标移动监听事件
+			event.preventDefault();
+			document.onmousemove = null;
+		});
+
+	});
+	volPro.onclick = function (event) {
+		event.preventDefault();
+		if (!event) {event = window.event;}
+		var posX = event.clientX;
+		volNum = moveDot(volX,volX+volWidth,posX-6,volDot,1);
+		audio.volume = volNum;
+	};
 }
 
 function getLeft(e){//获取元素的横坐标
@@ -156,16 +187,25 @@ function getLeft(e){//获取元素的横坐标
     return offset;
 }
 
-function moveDot (left,right,X) {//移动点 传入进度条的左右坐标  鼠标目前坐标
+function moveDot (left,right,X,obj,base) {//移动点 条的左右坐标  鼠标目前横坐标  点对象  基于98还是100
 	var rate = 0; //鼠标在进度条位置的百分比
 	if (X>right) {
-		rate = 98;
+		rate = base;
 	}else if(X<left){
 		rate = 0;
 	}else{
-		rate = (X-left)/(right-left)*98;
+		rate = (X-left)/(right-left)*base;
 	}
-	processDot.css('left', rate+'%');
+	if (base==1) {
+		if (!rate) {//拖到静音的时候
+			classTog('icon-jingyin','icon-shengyin',volumeBtn);
+		}else{
+			classTog('icon-shengyin','icon-jingyin',volumeBtn);
+		}
+		obj.css('left', rate*100 +'%');
+	}else{
+	obj.css('left', rate+'%');		
+	}
 	return rate;
 }
 

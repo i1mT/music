@@ -17,10 +17,10 @@
 <body>
 	<img src="images/background.jpg" class="bg">
 	<div class="panel">
-		<div class="panel-title">音乐播放器 - By iimT</div>
+		<div class="panel-title" >音乐播放器 - By iimT</div>
 		<div class="volume">
 			<i class="iconfont icon-shengyin"></i>
-			<div class="volume-line">
+			<div class="volume-line" id="vol">
 				<span class="dot-volume"></span>
 			</div>
 		</div>
