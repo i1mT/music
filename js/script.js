@@ -41,27 +41,14 @@ var volumeBtn = $(".icon-shengyin");//音量按钮
 musicList.hide();//隐藏歌曲列表
 
 
-prev.on('click', function(event) {//上一曲
+prev.on('click',function (event) {
 	event.preventDefault();
-	curMusicIndex--;
-	if (curMusicIndex<0) {
-		curMusicIndex = musicNames.length-1;
-	}
-	
-	processDot.css('left', 0 + '%');
-	playMusicByIndex(curMusicIndex);
-	playMusic();
+	playPrev();
 });
 
-next.on('click', function(event) {//下一曲
+next.on('click',function (event) {
 	event.preventDefault();
-	curMusicIndex++;
-	if (curMusicIndex>=musicNames.length) {
-		curMusicIndex = 0;
-	}
-	processDot.css('left', 0 + '%');
-	playMusicByIndex(curMusicIndex);
-	playMusic();
+	playNext();
 });
 
 ListTog.on('click', function(event) {//列表按钮-->显示与隐藏
@@ -88,26 +75,44 @@ play.on('click',function(event) {//播放按钮-->播放与暂停
 	changePanelTitle();//改变面板的标题
 });
 
+loopMethod.on('click',function(event) {
+	event.preventDefault();
+	console.log("loop method clicked!")
+ 	if (audio.loop) {//如果当前是单曲循环模式
+ 		audio.loop = false;//关闭单曲循环
+ 		console.log('关闭单曲循环');
+ 		classTog('icon-shuaxin','icon-danquxunhuan',loopMethod);
+ 	}else {
+ 		audio.loop = true;//开启单曲循环
+ 		console.log('开启单曲循环');
+ 		classTog('icon-danquxunhuan','icon-shuaxin',loopMethod);
+ 	}
+});
+
 volumeBtn.on("click",function (){
 	if (audio.muted) {
 		console.log("当前是静音,打开声音");
 		audio.muted = false;//打开声音
-		volumeBtn.addClass('icon-shengyin');
-		volumeBtn.removeClass('icon-jingyin');
+		classTog('icon-shengyin','icon-jingyin',volumeBtn);
 	}else{
 		console.log("当前不是静音,关闭声音");
 		audio.muted = true;//关闭声音
-		volumeBtn.addClass('icon-jingyin');
-		volumeBtn.removeClass('icon-shengyin');
+		classTog('icon-jingyin','icon-shengyin',volumeBtn);
 	}
 });
+
+function classTog (addCls,delCls,obj) {
+	obj.addClass(addCls);
+	obj.removeClass(delCls);
+	console.log('tog success!');
+}
 
 dragDot();
 
 function dragDot(){
 	var proDot = $(".dot");//获取到进度条的dot
 	var volDot = $(".dot-volume");//获取到音量的dot
-	var pro = document.getElementById('pro');
+	var pro = document.getElementById('pro');//蓝色进度条
 	var proX = getLeft(pro);//进度条的横坐标
 	var proWidth = $(pro).width();//进度条的宽
 	var curTime;
@@ -121,7 +126,7 @@ function dragDot(){
 			event = window.event;
 			posX = event.clientX;
 			curTime = moveDot(proX,proX+proWidth,posX-6);
-			audio.currentTime = curTime*audio.duration/100;
+			audio.currentTime = curTime*audio.duration/98;
 		};
 		$(document).on('mouseup',function(event) {
 			event.preventDefault();
@@ -136,11 +141,12 @@ function dragDot(){
 		event.preventDefault();
 		if (!event) {event = window.event}
 		var posX = event.clientX;//鼠标在屏幕上的坐标
-		curTime = moveDot(proX,proX+proWidth,posX-6);
-		audio.currentTime = curTime*audio.duration/100;
+		curTime = moveDot(proX,proX+proWidth,posX);
+		audio.currentTime = curTime*audio.duration/98;
 		audio.play();
 		playStatu = 1;
 		changePlayIcon();
+		processDotGo();
 	}
 }
 
@@ -157,9 +163,9 @@ function moveDot (left,right,X) {//移动点 传入进度条的左右坐标  鼠
 	}else if(X<left){
 		rate = 0;
 	}else{
-		rate = (X-left)/(right-left)*100;
+		rate = (X-left)/(right-left)*98;
 	}
-	processDot.css('left', rate>98? 98:rate + '%');
+	processDot.css('left', rate+'%');
 	return rate;
 }
 
@@ -182,19 +188,43 @@ function pauseMusic(){//当一个音乐暂停的时候需要干的事情
 	clearInterval(processDotTimer);
 }
 
-function processDotGo(){//传入音乐总时长
+function playPrev() {//播放上一曲
+	curMusicIndex--;
+	if (curMusicIndex<0) {
+		curMusicIndex = musicNames.length-1;
+	}
+	
+	processDot.css('left', 0 + '%');
+	playMusicByIndex(curMusicIndex);
+	playMusic();
+}
+
+function playNext() {//播放下一曲
+	curMusicIndex++;
+	if (curMusicIndex>=musicNames.length) {
+		curMusicIndex = 0;
+	}
+	processDot.css('left', 0 + '%');
+	playMusicByIndex(curMusicIndex);
+	playMusic();
+}
+
+function processDotGo(){//传入音乐总时长  让进度条开始go!
 	if (processDotTimer) {
 		clearInterval(processDotTimer);
 	}
 	var dur = Math.round(audio.duration);
 	playedTime = audio.currentTime;
-	var processRate = (playedTime/dur)*100;
+	var processRate = (playedTime/dur)*98;
 	processDotTimer = setInterval(function () {
 		playedTime=audio.currentTime;
-		processRate = (playedTime/dur)*100;
-		processDot.css('left', processRate>98.5? 98.5:processRate + '%');
+		processRate = (playedTime/dur)*98;
+		processDot.css('left', processRate+'%');
 		if (audio.ended) {
-			if (!audio.loop) {clearInterval(processDotTimer);}
+			if (!audio.loop) {//如果不是单曲循环模式  就播放下一曲
+				playNext();
+				clearInterval(processDotTimer);
+			}
 			processDot.css('left', 0 + '%');
 			playedTime = 0;
 		}

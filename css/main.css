@@ -93,7 +93,9 @@ li{
 	color: #ccc;
 }
 
-.icon-danquxunhuan:before,.icon-kuaitui:before,.icon-kuaijin:before,.icon-liebiao:before{
+.icon-danquxunhuan:before,.icon-kuaitui:before
+,.icon-kuaijin:before,.icon-liebiao:before
+,.icon-shuaxin:before,.icon-suiji:before{
 	font-size: 1.8em;
 }
 .icon-liebiao:before{
