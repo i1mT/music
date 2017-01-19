@@ -1,46 +1,51 @@
-/*
-*音乐播放器***
-*作者-iimT
-*博客www.iimt.me
-*2017.1.10
-*/
-var audio = $("audio")[0];
-var playStatu = 0;//初始状态未播放
-var play = $("#play");//播放暂停按钮
-var ListTog = $("#playList");//音乐列表按钮
-var prev = $("#after"); //上一曲
-var next = $("#before");//下一曲
-var loopMethod = $("#loop");//循环按钮
-var musicList = $(".List");//音乐列表
-var musicListItems = musicList.find('ul li'); //List下的所有li
-var panelTitle = $(".panel-title");
-var musicSrc = []; //音乐文件的路径
-var musicImgSrc = [];  //音乐对应头像的路径
-var musicNames = []; //音乐名称
-getMusicAllSrc();  //获取上面三项
-var songCover = $(".song-img img");
-var curMusicIndex = 0;
-var processDotTimer; //进度条的时间函数
-var playedTime;//当前音乐播放了多长时间
-var processDot = $(".dot");
-var volumeBtn = $(".icon-shengyin");//音量按钮
-var volNum = 1;//设置音量
-var volDot = $(".dot-volume");//音量的dot
-var ListItems = $(".List ul li");
+window.onload = function () {
+	console.log("页面加载完成~");
+}
+	/*
+	*音乐播放器***
+	*作者-iimT
+	*博客www.iimt.me
+	*2017.1.10
+	*/
+	var audio = $("audio")[0];
+	var playStatu = 0;//初始状态未播放
+	var play = $("#play");//播放暂停按钮
+	var ListTog = $("#playList");//音乐列表按钮
+	var prev = $("#after"); //上一曲
+	var next = $("#before");//下一曲
+	var loopMethod = $("#loop");//循环按钮
+	var musicList = $(".List");//音乐列表
+	var musicListItems = musicList.find('ul li'); //List下的所有li
+	var panelTitle = $(".panel-title");
+	var musicSrc = []; //音乐文件的路径
+	var musicImgSrc = [];  //音乐对应头像的路径
+	var musicNames = []; //音乐名称
+	getMusicAllSrc();  //获取上面三项
+	var songCover = $(".song-img img");
+	var curMusicIndex = 0;
+	var processDotTimer; //进度条的时间函数
+	var playedTime;//当前音乐播放了多长时间
+	var processDot = $(".dot");
+	var volumeBtn = $(".icon-shengyin");//音量按钮
+	var volNum = 1;//设置音量
+	var volDot = $(".dot-volume");//音量的dot
+	var ListItems = $(".List ul li");//播放列表中的所有项
+	var coverImg = $(".song-img img");//音乐封面
+	var coverImgRotateTimer;//封面图片旋转用到的时间函数
+	var processRate;//播放进度百分比
+	var dur;//当前音乐的总时间
+	var tips = $(".log p");//提示
+	tips.hide();
 
-
-
-(function () { //初始化
-	if (musicSrc.length>=0) {
-		changeCurMusicSrc(curMusicIndex);//设置第一个播放的音乐
-		changeMusicCover(curMusicIndex);//设置封面
-	}
-	audio.loop = true;//初始化为单曲循环方式
-	audio.volume = volNum;
-	playedTime = 0;
-})();
-
-
+	(function () { //初始化
+		if (musicSrc.length>=0) {
+			changeCurMusicSrc(curMusicIndex);//设置第一个播放的音乐
+			changeMusicCover(curMusicIndex);//设置封面
+		}
+		audio.loop = true;//初始化为单曲循环方式
+		audio.volume = volNum;
+		playedTime = 0;
+	})();
 
 musicList.hide();//隐藏歌曲列表
 
@@ -66,20 +71,17 @@ ListTog.on('click', function(event) {//列表按钮-->显示与隐藏
 
 play.on('click',function(event) {//播放按钮-->播放与暂停
 	event.preventDefault();
-	playMusicByIndex(curMusicIndex);
 	if (!playStatu) {
-		audio.play();
 		playStatu = 1;
-		audio.onloadeddata = processDotGo;//在音乐加载完成之后开始进度条走的事件
+		playMusic();
 	}else{
 		audio.pause();
 		playStatu = 0;
-		clearInterval(processDotTimer);
+		clearTimer();
 	}
 	changePlayIcon();//改变播放和暂停的图标
 	changePanelTitle();//改变面板的标题
 });
-
 loopMethod.on('click',function(event) {
 	event.preventDefault();
  	if (audio.loop) {//如果当前是单曲循环模式
@@ -90,7 +92,6 @@ loopMethod.on('click',function(event) {
  		classTog('icon-danquxunhuan','icon-shuaxin',loopMethod);
  	}
 });
-
 volumeBtn.on("click",function (){
 	if (volNum==0) {
 		volNum = 1;//打开声音
@@ -102,15 +103,13 @@ volumeBtn.on("click",function (){
 	audio.volume = volNum;
 	volDot.css('left', volNum*100 +'%');
 });
-
 ListItems.on('click',function (event) {
 	event.preventDefault();
+	processDot.css('left', '0%');
 	curMusicIndex = $(this).attr('index');//更改播放的音乐索引
 	playMusicByIndex(curMusicIndex);
 	playMusic();
-})
-
-
+});
 dragDot();//添加进度条 音量条事件监听
 
 function classTog (addCls,delCls,obj) {//对应对象切换cls
@@ -189,7 +188,6 @@ function dragDot(){//音乐进度条和音量托条事件绑定
 		audio.volume = volNum;
 	};
 }
-
 function getLeft(e){//获取元素的横坐标
     var offset=e.offsetLeft;
     if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
@@ -220,74 +218,99 @@ function moveDot (left,right,X,obj,base) {//移动点 条的左右坐标  鼠标
 
 
 function playMusic(){//当一个音乐播放的时候需要干的事情
+	playMusicByIndex(curMusicIndex);
 	audio.play(); //播放音乐
-	playStatu = 1;//设置当前状态为-->播放
 	changePlayIcon();//改变播放和暂停的图标
-	changePanelTitle();//改变面板的标题
+	playStatu = 1;//设置当前状态为-->播放
 	playedTime = 0;
-	audio.addEventListener('loadeddata',function () {
-		processDotGo();
-	});
+	var loadedTimer;
+	processDotGo();
 }
 
 function pauseMusic(){//当一个音乐暂停的时候需要干的事情
 	audio.pause();
 	playStatu = 0;//设置当前状态为-->暂停
 	changePlayIcon();//改变播放和暂停的图标
+	clearTimer();
+}
+
+function clearTimer() {
 	clearInterval(processDotTimer);
+	clearInterval(coverImgRotateTimer);
 }
 
 function playPrev() {//播放上一曲
+	clearTimer();
 	curMusicIndex--;
 	if (curMusicIndex<0) {
 		curMusicIndex = musicNames.length-1;
 	}
-	
 	processDot.css('left', 0 + '%');
-	playMusicByIndex(curMusicIndex);
 	playMusic();
 }
 
 function playNext() {//播放下一曲
+	clearTimer();
 	curMusicIndex++;
 	if (curMusicIndex>=musicNames.length) {
 		curMusicIndex = 0;
 	}
 	processDot.css('left', 0 + '%');
-	playMusicByIndex(curMusicIndex);
 	playMusic();
 }
 
+function showTip (content) {
+	tips.html(content);
+	tips.fadeIn(200);
+	tips.fadeOut(200);
+}
+
 function processDotGo(){//传入音乐总时长  让进度条开始go!
-	if (processDotTimer) {
-		clearInterval(processDotTimer);
+	if (processDotTimer || coverImgRotateTimer) {
+		clearTimer();
 	}
-	var dur = Math.round(audio.duration);
+	dur = Math.round(audio.duration);
 	var cnt=1;
 	playedTime = audio.currentTime;
-	var processRate = (playedTime/dur)*98;
-	processDotTimer = setInterval(function () {
-		playedTime=audio.currentTime;
-		processRate = (playedTime/dur)*98;
-		processDot.css('left', processRate+'%');
-		processDot.css('box-shadow', '0 0 3px 0px #fff');
-		if (audio.ended) {
-			if (!audio.loop) {//如果不是单曲循环模式  就播放下一曲
-				playNext();
-				clearInterval(processDotTimer);
-			}
-			processDot.css('left', 0 + '%');
-			playedTime = 0;
-		}
-		//添加小点忽闪忽灭样式
-		if (cnt) {
-			cnt = 0;
-			processDot.css('box-shadow', '0 0 3px 0px #fff');
+	processRate = (playedTime/dur)*98;
+	processDotTimer = setInterval(function () {//进度条走
+		if(!audio.played.length){
+			showTip("正在缓冲~");
 		}else{
-			cnt = 1;
-			processDot.css('box-shadow', '0 0 8px 0px #fff');
+			dur = Math.round(audio.duration);
+			playedTime=audio.currentTime;
+			processRate = (playedTime/dur)*98;
+			processDot.css('left', processRate+'%');
+			processDot.css('box-shadow', '0 0 3px 0px #fff');
+			if (audio.ended) {
+				if (!audio.loop) {//如果不是单曲循环模式  就播放下一曲
+					playNext();
+					clearTimer();
+				}
+				processDot.css('left', 0 + '%');
+				playedTime = 0;
+				coverImg.css('transform', 'rotate(0deg)');
+			}
+			//添加小点忽闪忽灭样式
+			if (cnt) {
+				cnt = 0;
+				processDot.css('box-shadow', '0 0 3px 0px #fff');
+			}else{
+				cnt = 1;
+				processDot.css('box-shadow', '0 0 8px 0px #fff');
+			}
+		}	
+	},400);
+
+	//封面旋转
+
+	var rotate = 0;
+	coverImgRotateTimer = setInterval(function () {
+		if(audio.played.length){
+			rotate += 0.2;
+			coverImg.css('transform', 'rotate('+ rotate +'deg)');
 		}
-	},500);
+	},20);
 }
 
 
@@ -309,6 +332,7 @@ function  changePanelTitle (index) {//改变面板标题为当前歌曲名  传�
 
 function changeMusicCover (index) { //设置音乐的封面
 	songCover.attr('src',musicImgSrc[index]);
+	songCover.css('transform', 'rotate(0deg)');
 }
 
 function changeCurMusicSrc (index){//设置音乐路径
@@ -326,9 +350,9 @@ function changeListItem (index) {//使当前播放音乐在列表中高亮
 }
 
 function playMusicByIndex (index) {//传入当前播放音乐的索引
+	changeCurMusicSrc(index);
 	changePanelTitle(index);//改变标题
 	changeMusicCover(index);
-	changeCurMusicSrc(index);
 	changeListItem(index);
 }
 
