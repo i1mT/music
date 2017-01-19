@@ -223,11 +223,24 @@ li{
 }
 
 .List ul li{
-	margin-top: .3em;
-	width: 92%;
+	padding: .15em 0;
+	padding-left: .2em;
+	width: 99%;
+	margin-right: 7%;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	cursor: pointer;
+}
+
+.List ul li:hover{
+	background: rgba(230,230,230,.2);
+	color: #eee;
+}
+
+.List ul li:active{
+	background: rgba(100,100,100,.3);
+	color: #eee;
 }
 
 @media screen and (min-width: 700px) and (max-width: 1025px){  /*ipad pro*/

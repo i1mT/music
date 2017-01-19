@@ -26,6 +26,7 @@ var processDot = $(".dot");
 var volumeBtn = $(".icon-shengyin");//音量按钮
 var volNum = 1;//设置音量
 var volDot = $(".dot-volume");//音量的dot
+var ListItems = $(".List ul li");
 
 
 
@@ -65,6 +66,7 @@ ListTog.on('click', function(event) {//列表按钮-->显示与隐藏
 
 play.on('click',function(event) {//播放按钮-->播放与暂停
 	event.preventDefault();
+	playMusicByIndex(curMusicIndex);
 	if (!playStatu) {
 		audio.play();
 		playStatu = 1;
@@ -101,10 +103,17 @@ volumeBtn.on("click",function (){
 	volDot.css('left', volNum*100 +'%');
 });
 
+ListItems.on('click',function (event) {
+	event.preventDefault();
+	curMusicIndex = $(this).attr('index');//更改播放的音乐索引
+	playMusicByIndex(curMusicIndex);
+	playMusic();
+})
+
 
 dragDot();//添加进度条 音量条事件监听
 
-function classTog (addCls,delCls,obj) {
+function classTog (addCls,delCls,obj) {//对应对象切换cls
 	obj.addClass(addCls);
 	obj.removeClass(delCls);
 }
@@ -254,12 +263,14 @@ function processDotGo(){//传入音乐总时长  让进度条开始go!
 		clearInterval(processDotTimer);
 	}
 	var dur = Math.round(audio.duration);
+	var cnt=1;
 	playedTime = audio.currentTime;
 	var processRate = (playedTime/dur)*98;
 	processDotTimer = setInterval(function () {
 		playedTime=audio.currentTime;
 		processRate = (playedTime/dur)*98;
 		processDot.css('left', processRate+'%');
+		processDot.css('box-shadow', '0 0 3px 0px #fff');
 		if (audio.ended) {
 			if (!audio.loop) {//如果不是单曲循环模式  就播放下一曲
 				playNext();
@@ -267,6 +278,14 @@ function processDotGo(){//传入音乐总时长  让进度条开始go!
 			}
 			processDot.css('left', 0 + '%');
 			playedTime = 0;
+		}
+		//添加小点忽闪忽灭样式
+		if (cnt) {
+			cnt = 0;
+			processDot.css('box-shadow', '0 0 3px 0px #fff');
+		}else{
+			cnt = 1;
+			processDot.css('box-shadow', '0 0 8px 0px #fff');
 		}
 	},500);
 }
@@ -295,11 +314,22 @@ function changeMusicCover (index) { //设置音乐的封面
 function changeCurMusicSrc (index){//设置音乐路径
 	audio.src = musicSrc[index];
 }
+function changeListItem (index) {//使当前播放音乐在列表中高亮
+	ListItems.css({
+		color: '#ccc',
+		background: 'none'
+	});
+	$(ListItems[index]).css({
+		color: '#eee',
+		background: 'rgba(200,200,200,.1)'
+	});
+}
 
 function playMusicByIndex (index) {//传入当前播放音乐的索引
 	changePanelTitle(index);//改变标题
 	changeMusicCover(index);
 	changeCurMusicSrc(index);
+	changeListItem(index);
 }
 
 function getMusicAllSrc(){//获取音乐的地址 图片地址  音乐标题

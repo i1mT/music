@@ -31,7 +31,7 @@
 					<?php 
 						for ($i=2; $i < sizeof($musicNames); $i++) {
 					?> 
-						<li title= "<?php echo $musicNames[$i]; ?>"
+						<li index="<?php echo $i-2; ?>" title= "<?php echo $musicNames[$i]; ?>"
 							data-img= "<?php echo $musicImgHost.$musicImgNames[$i]; ?>"
 							src= "<?php echo $musicHost.$musicNames[$i]; ?>">
 							<?php echo str_replace('.mp3','', $musicNames[$i]) ?></li>
