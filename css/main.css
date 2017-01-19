@@ -196,6 +196,7 @@ li{
 	display: block;
 	border: .5em solid #fff;
 	border-radius: 50%;
+	transform: rotate(8deg);
 }
 
 .song-img img:hover{
@@ -209,8 +210,8 @@ li{
 	top: 3%;
 	left: 5%;
 	color: #ccc;
-	font-size: 1.3em;
-	background: rgba(0,0,0,.5);
+	font-size: 1.2em;
+	background: rgba(0,0,0,.8);
 	border-radius: 10px;
 }
 

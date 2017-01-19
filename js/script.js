@@ -70,7 +70,7 @@ play.on('click',function(event) {//播放按钮-->播放与暂停
 	if (!playStatu) {
 		audio.play();
 		playStatu = 1;
-		processDotGo();
+		audio.onloadeddata = processDotGo;//在音乐加载完成之后开始进度条走的事件
 	}else{
 		audio.pause();
 		playStatu = 0;
